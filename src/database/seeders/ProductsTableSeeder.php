@@ -53,7 +53,7 @@ class ProductsTableSeeder extends Seeder
             [
                 'name' => 'シャインマスカット',
                 'price' => 1400,
-                'image' => 'shine-muscat.png',
+                'image' => 'muscat.png',
                 'description' => '爽やかな香りと上品な甘みが特長的なシャインマスカットは大人から子どもまで大人気のフルーツです。疲れた脳や体のエネルギー補給にも最適の商品です。もぎたてフルーツのスムージーをお召し上がりください！',
                 'created_at' => now(),
                 'updated_at' => now(),
