@@ -12,4 +12,9 @@ class Product extends Model
         'image',
         'description',
     ];
+    // 季節（多対多）
+    public function seasons()
+    {
+        return $this->belongsToMany(Season::class);
+    }
 }

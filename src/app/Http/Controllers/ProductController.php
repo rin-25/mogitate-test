@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Season;
+use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -39,10 +42,56 @@ class ProductController extends Controller
     }
 
     // 商品詳細
-    public function show($productId)
+    public function edit($productId)
+    {
+        $product = Product::with('seasons')->findOrFail($productId);
+        $seasons = Season::all();
+        $selectedSeasonIds = $product->seasons->pluck('id')->toArray();
+
+        return view('products.show', compact('product', 'seasons', 'selectedSeasonIds'));
+    }
+
+    // 更新処理
+    public function update(UpdateProductRequest $request, $productId)
     {
         $product = Product::findOrFail($productId);
 
-        return view('products.show', compact('product'));
+        $product->name        = $request->name;
+        $product->price       = $request->price;
+        $product->description = $request->description;
+
+        // 画像アップロード
+        if ($request->hasFile('image')) {
+            $file     = $request->file('image');
+            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // storage/app/public/products に保存（シンボリックリンク用）
+            $path = $file->storeAs('products', $fileName, 'public');
+
+            // 一覧画面は public/fruits-img/ ファイル名 を見ているので、
+            // 同じファイルを public/fruits-img にもコピーしておく
+            $storagePath = storage_path('app/public/' . $path);
+            $publicPath  = public_path('fruits-img/' . $fileName);
+            File::copy($storagePath, $publicPath);
+
+            // DB にはファイル名だけを保存（一覧の既存ロジックを壊さないため）
+            $product->image = $fileName;
+        }
+
+        $product->save();
+
+        // 季節（多対多）を同期
+        $product->seasons()->sync($request->input('seasons', []));
+
+        return redirect()->route('products.index');
+    }
+
+    // 削除
+    public function destroy($productId)
+    {
+        $product = Product::findOrFail($productId);
+        $product->delete();
+
+        return redirect()->route('products.index');
     }
 }
