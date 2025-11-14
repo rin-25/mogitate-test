@@ -124,36 +124,56 @@
 
         </div>
 
-        {{-- ボタン群 --}}
-        <div style="margin-top:32px; display:flex; justify-content:space-between; align-items:center;">
-            {{-- 戻る --}}
-            <a href="{{ route('products.index') }}"
-                style="display:inline-block; padding:10px 40px; background:#e0e0e0; border-radius:4px;
-                        text-decoration:none; color:#555; font-size:14px;">
-                戻る
-            </a>
+            {{-- ボタン群 --}}
+<div style="margin-top:32px; display:flex; justify-content:space-between; align-items:center;">
 
-            <div style="display:flex; gap:16px; align-items:center;">
-                {{-- 変更を保存 --}}
-                <button type="submit"
-                        style="padding:10px 40px; background:#f2a900; border:none; border-radius:4px;
-                                color:#fff; font-size:14px; cursor:pointer;">
-                    変更を保存
-                </button>
+    {{-- 戻る --}}
+    <a href="{{ route('products.index') }}"
+        style="display:inline-block; padding:10px 40px; background:#e0e0e0; border-radius:4px;
+                text-decoration:none; color:#555; font-size:14px;">
+        戻る
+    </a>
 
-                {{-- 削除ボタン（ゴミ箱アイコン代わりの赤ボタン） --}}
-                <form action="{{ route('products.delete', ['productId' => $product->id]) }}"
-                        method="POST"
-                        onsubmit="return confirm('本当に削除しますか？');">
-                    @csrf
-                    <button type="submit"
-                            style="width:40px; height:40px; border-radius:50%; border:none;
-                                    background:#e74c3c; color:#fff; font-size:18px; cursor:pointer;">
-                        🗑
-                    </button>
-                </form>
-            </div>
-        </div>
-    </form>
+    <div style="display:flex; gap:16px; align-items:center;">
+
+        {{-- 変更を保存（更新フォームの submit） --}}
+        <button type="submit"
+                style="padding:10px 40px; background:#f2a900; border:none; border-radius:4px;
+                        color:#fff; font-size:14px; cursor:pointer;">
+            変更を保存
+        </button>
+
+        {{-- 🗑 削除ボタン（見た目だけここに配置） --}}
+        <button type="button"
+                onclick="if (confirm('本当に削除しますか？')) { document.getElementById('delete-form').submit(); }"
+                style="
+                    width:40px;
+                    height:40px;
+                    border-radius:50%;
+                    border:none;
+                    background:#e74c3c;
+                    color:#fff;
+                    font-size:18px;
+                    cursor:pointer;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    padding:0;
+                    line-height:1;
+                ">
+            🗑
+        </button>
+
+    </div>
 </div>
+</form> {{-- ← ここで更新フォームを閉じる --}}
+
+{{-- 実際に削除リクエストを送る hidden フォーム --}}
+<form id="delete-form"
+        action="{{ route('products.delete', ['productId' => $product->id]) }}"
+        method="POST"
+        style="display:none;">
+    @csrf
+</form>
+
 @endsection

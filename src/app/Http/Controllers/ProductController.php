@@ -89,7 +89,9 @@ class ProductController extends Controller
     // 削除
     public function destroy($productId)
     {
+        dd('destroy 呼び出し');
         $product = Product::findOrFail($productId);
+        $product->seasons()->detach();
         $product->delete();
 
         return redirect()->route('products.index');
