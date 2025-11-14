@@ -9,8 +9,8 @@
     </div>
 
     <form action="{{ route('products.update', ['productId' => $product->id]) }}"
-          method="POST"
-          enctype="multipart/form-data">
+            method="POST"
+            enctype="multipart/form-data">
         @csrf
 
         <div style="display:flex; gap:40px; align-items:flex-start;">
@@ -37,11 +37,12 @@
                 </div>
 
                 {{-- 画像エラー --}}
-                @error('image')
+                @foreach($errors->get('image') as $message)
                     <p style="color:#e74c3c; font-size:12px; margin-top:6px;">
                         {{ $message }}
                     </p>
-                @enderror
+                @endforeach
+
             </div>
 
             {{-- 右：テキスト項目 --}}
@@ -51,30 +52,30 @@
                 <div style="margin-bottom:16px;">
                     <label style="display:block; font-size:14px; margin-bottom:4px;">商品名</label>
                     <input type="text"
-                           name="name"
-                           value="{{ old('name', $product->name) }}"
-                           placeholder="商品名を入力"
-                           style="width:100%; padding:8px 10px; border-radius:2px; border:1px solid #ddd; font-size:14px;">
-                    @error('name')
+                            name="name"
+                            value="{{ old('name', $product->name) }}"
+                            placeholder="商品名を入力"
+                            style="width:100%; padding:8px 10px; border-radius:2px; border:1px solid #ddd; font-size:14px;">
+                    @foreach($errors->get('name') as $message)
                         <p style="color:#e74c3c; font-size:12px; margin-top:4px;">
                             {{ $message }}
                         </p>
-                    @enderror
+                    @endforeach
                 </div>
 
                 {{-- 値段 --}}
                 <div style="margin-bottom:16px;">
                     <label style="display:block; font-size:14px; margin-bottom:4px;">値段</label>
                     <input type="text"
-                           name="price"
-                           value="{{ old('price', $product->price) }}"
-                           placeholder="値段を入力"
-                           style="width:100%; padding:8px 10px; border-radius:2px; border:1px solid #ddd; font-size:14px;">
-                    @error('price')
+                            name="price"
+                            value="{{ old('price', $product->price) }}"
+                            placeholder="値段を入力"
+                            style="width:100%; padding:8px 10px; border-radius:2px; border:1px solid #ddd; font-size:14px;">
+                    @foreach($errors->get('price') as $message)
                         <p style="color:#e74c3c; font-size:12px; margin-top:4px;">
                             {{ $message }}
                         </p>
-                    @enderror
+                    @endforeach
                 </div>
 
                 {{-- 季節（複数選択） --}}
@@ -89,19 +90,20 @@
                         @foreach($seasons as $season)
                             <label>
                                 <input type="checkbox"
-                                       name="seasons[]"
-                                       value="{{ $season->id }}"
-                                       {{ in_array($season->id, $oldSeasons, true) ? 'checked' : '' }}>
+                                        name="seasons[]"
+                                        value="{{ $season->id }}"
+                                        {{ in_array($season->id, $oldSeasons, true) ? 'checked' : '' }}>
                                 {{ $season->name }}
                             </label>
                         @endforeach
                     </div>
 
-                    @error('seasons')
+                    @foreach($errors->get('seasons') as $message)
                         <p style="color:#e74c3c; font-size:12px; margin-top:4px;">
                             {{ $message }}
                         </p>
-                    @enderror
+                    @endforeach
+
                 </div>
 
             </div>
@@ -111,22 +113,23 @@
         <div style="margin-top:24px;">
             <label style="display:block; font-size:14px; margin-bottom:4px;">商品説明</label>
             <textarea name="description"
-                      rows="4"
-                      placeholder="商品の説明を入力"
-                      style="width:100%; padding:10px; border-radius:2px; border:1px solid #ddd; font-size:14px; resize:vertical;">{{ old('description', $product->description) }}</textarea>
-            @error('description')
+                        rows="4"
+                        placeholder="商品の説明を入力"
+                        style="width:100%; padding:10px; border-radius:2px; border:1px solid #ddd; font-size:14px; resize:vertical;">{{ old('description', $product->description) }}</textarea>
+            @foreach($errors->get('description') as $message)
                 <p style="color:#e74c3c; font-size:12px; margin-top:4px;">
                     {{ $message }}
                 </p>
-            @enderror
+            @endforeach
+
         </div>
 
         {{-- ボタン群 --}}
         <div style="margin-top:32px; display:flex; justify-content:space-between; align-items:center;">
             {{-- 戻る --}}
             <a href="{{ route('products.index') }}"
-               style="display:inline-block; padding:10px 40px; background:#e0e0e0; border-radius:4px;
-                      text-decoration:none; color:#555; font-size:14px;">
+                style="display:inline-block; padding:10px 40px; background:#e0e0e0; border-radius:4px;
+                        text-decoration:none; color:#555; font-size:14px;">
                 戻る
             </a>
 
@@ -134,18 +137,18 @@
                 {{-- 変更を保存 --}}
                 <button type="submit"
                         style="padding:10px 40px; background:#f2a900; border:none; border-radius:4px;
-                               color:#fff; font-size:14px; cursor:pointer;">
+                                color:#fff; font-size:14px; cursor:pointer;">
                     変更を保存
                 </button>
 
                 {{-- 削除ボタン（ゴミ箱アイコン代わりの赤ボタン） --}}
                 <form action="{{ route('products.delete', ['productId' => $product->id]) }}"
-                      method="POST"
-                      onsubmit="return confirm('本当に削除しますか？');">
+                        method="POST"
+                        onsubmit="return confirm('本当に削除しますか？');">
                     @csrf
                     <button type="submit"
                             style="width:40px; height:40px; border-radius:50%; border:none;
-                                   background:#e74c3c; color:#fff; font-size:18px; cursor:pointer;">
+                                    background:#e74c3c; color:#fff; font-size:18px; cursor:pointer;">
                         🗑
                     </button>
                 </form>

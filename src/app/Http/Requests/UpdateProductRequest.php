@@ -16,7 +16,7 @@ class UpdateProductRequest extends FormRequest
         return [
             'name'        => ['required'],
             'price'       => ['required', 'integer', 'between:0,10000'],
-            'image'       => ['required', 'file', 'mimes:png,jpeg'],
+            'image'       => ['nullable', 'file', 'mimes:png,jpeg'],
             'seasons'     => ['required', 'array'],
             'seasons.*'   => ['integer'],
             'description' => ['required', 'max:120'],
