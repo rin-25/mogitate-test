@@ -19,5 +19,7 @@ MySQL 8.0.26.
 nginx 1.21.1. 
 
 # ER図
-mogitate.drawio.png
+![ER図](mogitate.drawio.png)
 
+# URL
+・phpMyAdmin:http://localhost:8080/ 
