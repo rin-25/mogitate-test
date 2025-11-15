@@ -30,7 +30,7 @@ class ProductController extends Controller
 
         // 画像アップロード（必須）
         $file     = $request->file('image');
-        $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+        $fileName = $file->getClientOriginalName();
 
         // storage/app/public/products に保存
         $path = $file->storeAs('products', $fileName, 'public');
@@ -104,7 +104,7 @@ class ProductController extends Controller
         // 画像アップロード
         if ($request->hasFile('image')) {
             $file     = $request->file('image');
-            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+            $fileName = $file->getClientOriginalName();
 
             // storage/app/public/products に保存（シンボリックリンク用）
             $path = $file->storeAs('products', $fileName, 'public');
