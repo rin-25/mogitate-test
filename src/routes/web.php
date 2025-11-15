@@ -7,8 +7,5 @@ Route::get('/products/search', [ProductController::class, 'index'])->name('produ
 Route::get('/products/detail/{productId}', [ProductController::class, 'edit'])->name('products.show');
 Route::post('/products/{productId}/update', [ProductController::class, 'update'])->name('products.update');
 Route::post('/products/{productId}/delete', [ProductController::class, 'destroy'])->name('products.delete');
-
-// 「+商品を追加」用（今は画面だけ飛べればOKならこれ）
-Route::get('/products/create', function () {
-    return '商品登録画面（あとで実装）';
-})->name('products.create');
+Route::get('/products/register', [ProductController::class, 'create'])->name('products.create');
+Route::post('/products/register', [ProductController::class, 'store'])->name('products.store');

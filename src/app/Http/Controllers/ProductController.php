@@ -5,11 +5,52 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Season;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\StoreProductRequest;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    // ★ 商品登録画面表示
+    public function create()
+    {
+        $seasons = Season::all(); // 春・夏・秋・冬
+
+        return view('products.create', compact('seasons'));
+    }
+
+    // ★ 商品登録処理
+    public function store(StoreProductRequest $request)
+    {
+        // 新規 Product インスタンス
+        $product = new Product();
+        $product->name        = $request->name;
+        $product->price       = $request->price;
+        $product->description = $request->description;
+
+        // 画像アップロード（必須）
+        $file     = $request->file('image');
+        $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+
+        // storage/app/public/products に保存
+        $path = $file->storeAs('products', $fileName, 'public');
+
+        // 一覧で使っている public/fruits-img にもコピーしておく
+        $storagePath = storage_path('app/public/' . $path);
+        $publicPath  = public_path('fruits-img/' . $fileName);
+        File::copy($storagePath, $publicPath);
+
+
+        // DB にはファイル名だけ保存（一覧／詳細と同じ仕様）
+        $product->image = $fileName;
+
+        $product->save();
+
+        // 季節（多対多）
+        $product->seasons()->sync($request->input('seasons', []));
+
+        return redirect()->route('products.index');
+    }
     // 商品一覧（検索・並び替え込み）
     public function index(Request $request)
     {
