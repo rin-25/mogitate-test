@@ -42,23 +42,40 @@
                 <p style="color:#e74c3c; font-size:12px; margin-top:4px;">{{ $message }}</p>
             @endforeach
         </div>
-
-        {{-- 商品画像 --}}
-        <div style="margin-bottom:20px;">
+    {{-- 商品画像 --}}
+    <div style="margin-bottom:20px;">
             <label style="display:flex; align-items:center; font-size:14px; margin-bottom:4px;">
                 <span>商品画像</span>
                 <span style="margin-left:8px; font-size:11px; color:#fff; background:#e74c3c; padding:2px 6px; border-radius:2px;">
                     必須
                 </span>
             </label>
-            <label style="display:inline-block; padding:6px 12px; background:#e0e0e0; border-radius:2px; cursor:pointer; font-size:13px;">
-                ファイルを選択
-                <input type="file" name="image" style="display:none;">
-            </label>
-            @foreach($errors->get('image') as $message)
-                <p style="color:#e74c3c; font-size:12px; margin-top:4px;">{{ $message }}</p>
-            @endforeach
+
+        {{-- ファイル選択ボタン --}}
+        <label style="display:inline-block; padding:6px 12px; background:#e0e0e0; border-radius:2px; cursor:pointer; font-size:13px;">
+            ファイルを選択
+            <input
+            id="image-input"
+            type="file"
+            name="image"
+            accept="image/png,image/jpeg"
+            style="display:none;"
+            onchange="previewImage(event)"  {{-- ★ ここでプレビュー関数を呼ぶ --}}
+            >
+        </label>
+
+        @foreach($errors->get('image') as $message)
+            <p style="color:#e74c3c; font-size:12px; margin-top:4px;">{{ $message }}</p>
+        @endforeach
+
+        {{-- ★ 画像プレビューエリア（最初は非表示） --}}
+        <div style="margin-top:12px;">
+            <img id="image-preview"
+                src=""
+                alt="プレビュー"
+                style="display:none; max-width:100%; width:100%; max-height:300px; object-fit:cover; border-radius:4px; background:#fff;">
         </div>
+    </div>
 
         {{-- 季節（複数選択） --}}
         <div style="margin-bottom:20px;">
@@ -125,4 +142,21 @@
         </div>
     </form>
 </div>
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('image-preview');
+
+        if (!file) {
+            // ファイルが未選択になった場合はプレビューを消す
+            preview.style.display = 'none';
+            preview.src = '';
+            return;
+        }
+
+        const url = URL.createObjectURL(file);
+        preview.src = url;
+        preview.style.display = 'block';
+    }
+</script>
 @endsection
