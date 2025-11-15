@@ -18,7 +18,7 @@
             <div style="flex:1;">
                 {{-- プレビュー画像 --}}
                 <div style="margin-bottom:12px;">
-                    <img
+                    <img id="image-preview"
                         src="{{ asset('fruits-img/' . $product->image) }}"
                         alt="{{ $product->name }}"
                         style="width:100%; max-width:400px; height:auto; border-radius:4px; object-fit:cover; background:#fff;"
@@ -29,7 +29,15 @@
                 <div style="display:flex; align-items:center; gap:8px;">
                     <label style="display:inline-block; padding:6px 12px; background:#e0e0e0; border-radius:2px; cursor:pointer;">
                         ファイルを選択
-                        <input type="file" name="image" style="display:none;">
+                        <input
+                            id="image-input"
+                            type="file"
+                            name="image"
+                            accept="image/png,image/jpeg"
+                            style="display:none;"
+                            onchange="previewUpdateImage(event)"  {{-- ★追加 --}}
+                        >
+
                     </label>
                     <span style="font-size:12px; color:#666;">
                         {{ $product->image }}
@@ -175,5 +183,15 @@
         style="display:none;">
     @csrf
 </form>
+<script>
+    function previewUpdateImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('image-preview');
 
+        if (!file) return;
+
+        const url = URL.createObjectURL(file);
+        preview.src = url;
+    }
+</script>
 @endsection
